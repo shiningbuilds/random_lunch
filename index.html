@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#f6f3ee">
+<title>오늘 뭐 먹을까?</title>
+<style>
+  :root {
+    --bg: #f6f3ee;
+    --card: #ffffff;
+    --ink: #1f2a44;
+    --muted: #7b8194;
+    --brand: #1d3c78;
+    --brand-2: #2f5bb7;
+    --accent: #ff8a5c;
+    --accent-soft: #fff1ea;
+    --line: #ece7df;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body { height: 100%; }
+
+  body {
+    min-height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: max(16px, env(safe-area-inset-top)) 16px max(20px, env(safe-area-inset-bottom));
+    background:
+      radial-gradient(circle at 15% 10%, #fde7da 0, transparent 35%),
+      radial-gradient(circle at 85% 90%, #dfe7f7 0, transparent 40%),
+      var(--bg);
+    color: var(--ink);
+    font-family: "Pretendard", "Apple SD Gothic Neo", "Malgun Gothic", system-ui, sans-serif;
+    word-break: keep-all;
+    overflow-x: hidden;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  /* ── 로고 ── */
+  header {
+    width: 100%;
+    max-width: 440px;
+    display: flex;
+    align-items: center;
+    padding: 4px 4px 0;
+  }
+  .logo {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 6px;
+    text-decoration: none;
+    color: var(--brand);
+  }
+  .logo-mark {
+    font-size: 26px;
+    font-weight: 900;
+    letter-spacing: -0.02em;
+    font-family: "Arial Black", "Helvetica Neue", Arial, sans-serif;
+    line-height: 1;
+  }
+  .logo-mark .a { color: var(--brand-2); }
+  .logo-sub {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .25em;
+    color: var(--muted);
+  }
+
+  /* ── 카드 ── */
+  main {
+    flex: 1;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px 0;
+  }
+
+  .card {
+    width: 100%;
+    max-width: 440px;
+    background: var(--card);
+    border-radius: 28px;
+    padding: clamp(28px, 7vw, 40px) clamp(20px, 6vw, 36px);
+    text-align: center;
+    box-shadow:
+      0 1px 0 var(--line),
+      0 20px 40px -18px rgba(31, 42, 68, .25);
+  }
+
+  .eyebrow {
+    display: inline-block;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: .08em;
+    color: var(--accent);
+    background: var(--accent-soft);
+    padding: 6px 12px;
+    border-radius: 999px;
+  }
+
+  h1 {
+    margin-top: 14px;
+    font-size: clamp(26px, 7.5vw, 34px);
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    line-height: 1.25;
+  }
+
+  .sub {
+    margin-top: 8px;
+    font-size: 14px;
+    color: var(--muted);
+  }
+
+  /* ── 결과 ── */
+  .result {
+    margin: 28px auto 24px;
+    width: 100%;
+    min-height: 170px;
+    border-radius: 22px;
+    background: #faf8f4;
+    border: 1.5px dashed var(--line);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 20px 16px;
+    overflow: hidden;
+    transition: background .3s, border-color .3s;
+  }
+  .result.done {
+    background: var(--accent-soft);
+    border-color: transparent;
+  }
+
+  .emoji {
+    font-size: 56px;
+    line-height: 1;
+    height: 56px;
+  }
+  .menu {
+    font-size: clamp(24px, 7vw, 30px);
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    min-height: 1.3em;
+  }
+  .placeholder {
+    font-size: 15px;
+    color: var(--muted);
+  }
+
+  .rolling .emoji,
+  .rolling .menu { opacity: .45; filter: blur(.5px); }
+
+  .pop .emoji { animation: bounce .7s cubic-bezier(.3, 1.6, .5, 1) both; }
+  .pop .menu  { animation: rise .5s .1s ease-out both; }
+
+  @keyframes bounce {
+    0%   { transform: scale(.3) rotate(-20deg); opacity: 0; }
+    60%  { transform: scale(1.15) rotate(6deg); opacity: 1; }
+    100% { transform: scale(1) rotate(0); }
+  }
+  @keyframes rise {
+    from { transform: translateY(12px); opacity: 0; }
+    to   { transform: translateY(0); opacity: 1; }
+  }
+
+  /* ── 버튼 ── */
+  .btn {
+    appearance: none;
+    border: 0;
+    width: 100%;
+    min-height: 56px;
+    padding: 14px 20px;
+    border-radius: 16px;
+    background: var(--brand);
+    color: #fff;
+    font: inherit;
+    font-size: 17px;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 8px 18px -8px rgba(29, 60, 120, .7);
+    transition: transform .12s, background .2s, box-shadow .2s;
+  }
+  .btn:hover { background: var(--brand-2); }
+  .btn:active { transform: scale(.97); }
+  .btn:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
+  .btn:disabled { cursor: default; opacity: .85; }
+
+  .chips {
+    margin-top: 22px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 6px;
+  }
+  .chip {
+    font-size: 12px;
+    color: var(--muted);
+    background: #f4f1ec;
+    padding: 5px 10px;
+    border-radius: 999px;
+    transition: background .2s, color .2s;
+  }
+  .chip.on {
+    background: var(--brand);
+    color: #fff;
+  }
+
+  footer {
+    font-size: 12px;
+    color: var(--muted);
+    text-align: center;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .pop .emoji, .pop .menu { animation: none; }
+  }
+</style>
+</head>
+<body>
+
+  <header>
+    <span class="logo" aria-label="SeAH 세아그룹">
+      <span class="logo-mark">Se<span class="a">A</span>H</span>
+      <span class="logo-sub">GROUP</span>
+    </span>
+  </header>
+
+  <main>
+    <section class="card">
+      <span class="eyebrow">TODAY'S LUNCH</span>
+      <h1>오늘 뭐 먹을까?</h1>
+      <p class="sub">고민은 버튼에게 맡겨요</p>
+
+      <div class="result" id="result" aria-live="polite">
+        <div class="emoji" id="emoji">🍽️</div>
+        <div class="placeholder" id="menu">아래 버튼을 눌러보세요</div>
+      </div>
+
+      <button class="btn" id="pick">점심 메뉴 선택하기</button>
+
+      <div class="chips" id="chips"></div>
+    </section>
+  </main>
+
+  <footer>맛있는 점심 되세요 🙂</footer>
+
+<script>
+  const MENUS = [
+    { name: '짜장면',   emoji: '🍜' },
+    { name: '회덮밥',   emoji: '🐟' },
+    { name: '샤브샤브', emoji: '🍲' },
+    { name: '떡볶이',   emoji: '🌶️' },
+    { name: '타코',     emoji: '🌮' },
+    { name: '햄버거',   emoji: '🍔' },
+    { name: '닭갈비',   emoji: '🍗' },
+    { name: '샐러드',   emoji: '🥗' },
+  ];
+
+  const result = document.getElementById('result');
+  const emojiEl = document.getElementById('emoji');
+  const menuEl = document.getElementById('menu');
+  const btn = document.getElementById('pick');
+  const chipsEl = document.getElementById('chips');
+
+  const chips = MENUS.map((m) => {
+    const c = document.createElement('span');
+    c.className = 'chip';
+    c.textContent = m.name;
+    chipsEl.appendChild(c);
+    return c;
+  });
+
+  let last = -1;
+
+  // 직전 메뉴와 겹치지 않게 뽑기
+  function randomIndex(exclude) {
+    let i;
+    do { i = Math.floor(Math.random() * MENUS.length); } while (i === exclude && MENUS.length > 1);
+    return i;
+  }
+
+  function show(i) {
+    emojiEl.textContent = MENUS[i].emoji;
+    menuEl.textContent = MENUS[i].name;
+    menuEl.className = 'menu';
+    chips.forEach((c, k) => c.classList.toggle('on', k === i));
+  }
+
+  btn.addEventListener('click', () => {
+    const pick = randomIndex(last);
+    const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    btn.disabled = true;
+    result.classList.remove('done', 'pop');
+    result.classList.add('rolling');
+
+    // 슬롯머신처럼 점점 느려지며 돌다가 멈춤
+    const delays = reduce ? [] : [60, 60, 70, 80, 90, 110, 140, 180, 230];
+    let k = randomIndex(-1);
+    let step = 0;
+
+    function roll() {
+      if (step < delays.length) {
+        k = (k + 1) % MENUS.length;
+        show(k);
+        setTimeout(roll, delays[step++]);
+        return;
+      }
+      show(pick);
+      last = pick;
+      result.classList.remove('rolling');
+      void result.offsetWidth; // 애니메이션 재시작
+      result.classList.add('done', 'pop');
+      btn.disabled = false;
+    }
+    roll();
+  });
+</script>
+</body>
+</html>
